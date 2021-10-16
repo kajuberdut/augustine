@@ -33,7 +33,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/kajuberdut/augustine">
-    <img src="https://raw.githubusercontent.com/kajuberdut/augustine/main/images/icon.svg" alt="icon" width="160" height="160">
+    <img src="https://raw.githubusercontent.com/kajuberdut/augustine/master/images/icon.svg" alt="icon" width="160" height="160">
   </a>
 
   <h3 align="center">augustine</h3>
