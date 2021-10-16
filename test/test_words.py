@@ -1,5 +1,5 @@
 from ward import test
-from augustine.sample_text import words
+from augustine_text.sample_text import words
 
 @test("Not a very good test")
 def _():

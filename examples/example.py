@@ -1,4 +1,4 @@
-from augustine.sample_text import words
+from augustine_text.sample_text import words
 
 
 # 75K words of procedurally generated text

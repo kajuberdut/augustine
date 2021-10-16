@@ -1,1 +1,1 @@
-include augustine/mseeds/*.mseed
+include augustine_text/mseeds/*.mseed

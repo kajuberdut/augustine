@@ -33,7 +33,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/kajuberdut/augustine">
-    <img src="https://raw.githubusercontent.com/kajuberdut/augustine/master/images/icon.svg" alt="icon" width="160" height="160">
+    <img src="https://raw.githubusercontent.com/kajuberdut/augustine-text/master/images/icon.svg" alt="icon" width="160" height="160">
   </a>
 
   <h3 align="center">augustine</h3>
@@ -89,7 +89,7 @@ To get a local copy up and running follow these simple steps.
 ### Installing with pip
 
   ```sh
-  pip install augustine
+  pip install augustine_text
   ```
 
 For information about cloning and dev setup see: [Contributing](#Contributing)
@@ -100,7 +100,7 @@ For information about cloning and dev setup see: [Contributing](#Contributing)
 Here is an example showing basic usage.
 
 ```python
-from augustine.sample_text import words
+from augustine_text.sample_text import words
 
 
 # 75K words of procedurally generated text
@@ -127,7 +127,7 @@ Contributions are what make the open source community such an amazing place to b
 ### Cloning / Development setup
 1. Clone the repo and install
     ```sh
-    git clone https://github.com/kajuberdut/augustine.git
+    git clone https://github.com/kajuberdut/augustine-text.git
     cd augustine
     pipenv install --dev
     ```
@@ -160,14 +160,14 @@ Project Link: [https://github.com/kajuberdut/augustine](https://github.com/kajub
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/kajuberdut/augustine.svg?style=for-the-badge
-[contributors-url]: https://github.com/kajuberdut/augustine/graphs/contributors
+[contributors-url]: https://github.com/kajuberdut/augustine-text/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/kajuberdut/augustine.svg?style=for-the-badge
-[forks-url]: https://github.com/kajuberdut/augustine/network/members
+[forks-url]: https://github.com/kajuberdut/augustine-text/network/members
 [stars-shield]: https://img.shields.io/github/stars/kajuberdut/augustine.svg?style=for-the-badge
-[stars-url]: https://github.com/kajuberdut/augustine/stargazers
+[stars-url]: https://github.com/kajuberdut/augustine-text/stargazers
 [issues-shield]: https://img.shields.io/github/issues/kajuberdut/augustine.svg?style=for-the-badge
-[issues-url]: https://github.com/kajuberdut/augustine/issues
+[issues-url]: https://github.com/kajuberdut/augustine-text/issues
 [license-shield]: https://img.shields.io/badge/License-BSD%202--Clause-orange.svg?style=for-the-badge
-[license-url]: https://github.com/kajuberdut/augustine/blob/main/LICENSE
+[license-url]: https://github.com/kajuberdut/augustine-text/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/patrick-shechet

@@ -15,4 +15,4 @@ python_version = "3.9"
 allow_prereleases = true
 
 [packages]
-augustine = {editable = true, path = "."}
+augustine-text = {editable = true, path = "."}

@@ -1,4 +1,4 @@
-from augustine.sample_text import Markov, get_included_path
+from augustine_text.sample_text import Markov, get_included_path
 
 corpus = {
     "blackgate speech": """Hold your ground! Hold your ground!

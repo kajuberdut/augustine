@@ -10,14 +10,14 @@ README = (HERE / "README.md").read_text()
 
 
 setup(
-    name="augustine",
+    name="augustine_text",
     version="0.1.0",
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=(""),
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/kajuberdut/augustine",
+    url="https://github.com/kajuberdut/augustine-text",
     license="BSD",
     packages=find_packages(),
     include_package_data=True,
