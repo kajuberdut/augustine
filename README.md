@@ -72,7 +72,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Augustine is a fairly simple text generation library. The name is taken from St. Augustine of Hippo, the most prolifict of early church writers.
+Augustine is a text generation library. The name is taken from St. Augustine of Hippo, the most prolifict of early church writers.
 
 * No hard dependencies
 * 100% pure python
