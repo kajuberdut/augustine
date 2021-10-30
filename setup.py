@@ -8,10 +8,15 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
+version_path = HERE / "jerome" / "__version__.py"
+with open(version_path, "r") as fh:
+    version_dict = {}
+    exec(fh.read(), version_dict)
+    VERSION = version_dict["__version__"]
 
 setup(
     name="augustine_text",
-    version="0.1.0",
+    version=VERSION,
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=(""),
