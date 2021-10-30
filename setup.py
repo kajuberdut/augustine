@@ -18,12 +18,11 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/kajuberdut/augustine-text",
-    license="BSD",
+    license="MIT",
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "License :: OSI Approved :: BSD License",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3 :: Only",
     ],

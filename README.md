@@ -143,7 +143,7 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the BSD Two-clause License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
@@ -167,7 +167,7 @@ Project Link: [https://github.com/kajuberdut/augustine](https://github.com/kajub
 [stars-url]: https://github.com/kajuberdut/augustine-text/stargazers
 [issues-shield]: https://img.shields.io/github/issues/kajuberdut/augustine.svg?style=for-the-badge
 [issues-url]: https://github.com/kajuberdut/augustine-text/issues
-[license-shield]: https://img.shields.io/badge/License-BSD%202--Clause-orange.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/badge/License-MIT-orange.svg?style=for-the-badge
 [license-url]: https://github.com/kajuberdut/augustine-text/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/patrick-shechet
