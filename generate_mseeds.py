@@ -1,5 +1,3 @@
-from augustine_text.sample_text import Markov, get_included_path
-
 corpus = {
     "blackgate speech": """Hold your ground! Hold your ground!
 Sons of Gondor, of Rohan, my brothers, I see in your eyes the same fear that would take the heart of me
@@ -61,6 +59,9 @@ The price of greatness is responsibility""",
 }
 
 if __name__ == "__main__":
+    from augustine_text.data_manager import Doc, get_db
+
+    db = get_db().initialize()
+
     for name, text in corpus.items():
-        with get_included_path(name) as path:
-            Markov.from_corpus(text.lower()).save(path)
+        Doc.from_string(doc_name=name, text=text).save()
