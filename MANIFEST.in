@@ -1,1 +1,2 @@
 include augustine_text/data/*.db
+include augustine_text/data/*.bz

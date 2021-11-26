@@ -112,5 +112,7 @@ log.txt
 augustine/docs/*
 
 # exception to the rule
-!augustine/docs/.gitkeep 
-augustine/bw/burrowswheeler.build/*
+!augustine/docs/.gitkeep
+
+# Nuitka build files
+**/*.build/*
