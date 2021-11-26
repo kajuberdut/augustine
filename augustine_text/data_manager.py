@@ -17,6 +17,7 @@ def register_functions(db: Database, connection: Connection):
     connection.create_function("AdlerHash", 1, hash_word, deterministic=True)
     db.remove_hooks(hook_name="post_connect_hook")
 
+
 def get_db_path() -> Path:
     with resources.as_file(resources.files(data)) as f:
         return f / "august_data.db"
@@ -201,10 +202,18 @@ class Doc:
 
 
 if __name__ == "__main__":
-    # db = get_db().initialize()
+    import pathlib
 
-    # txt = """Sentence one.
-    # Sentence Two. Sentence Three four five.
-    # """
+    db = get_db().initialize()
 
-    # d = Doc.from_string("some name", txt).save()
+    path = pathlib.Path("/home/giblesnot/code/augustine-text")
+
+    limit = False
+    text = ""
+    for p in path.iterdir():
+        if p.is_file() and p.suffix == ".txt" and not limit:
+            with open(p, encoding="utf-8") as fh:
+                text += fh.read()
+        limit = True
+
+        d = Doc.from_string("hpmor", text).save()
