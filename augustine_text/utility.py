@@ -4,20 +4,13 @@ import typing as t
 from base64 import b32encode
 
 from augustine_text.patterns import GREEDY_WHITESPACE, SENTENCE_END, TOKEN_END
+import hashlib
 
 
-def hash_word(word: str) -> int:
-    pow, val = 1, 0
-    
-    def roll(char: str):
-        nonlocal val, pow
-        val = (val + (ord(char) - 96) * pow) % 1_000_000_009.0
-        pow = (pow * 31) % 1_000_000_009.0
-
-    # Rolling forward and then in reverse reduces collisions
-    [roll(char) for char in (word + word[::-1])]
-
-    return int(val)
+def hash_word(text: str):
+    return int.from_bytes(
+        hashlib.sha256(text.encode("utf-8")).digest()[:8], byteorder="big", signed=True
+    )
 
 
 def ue_id() -> str:
@@ -32,6 +25,3 @@ def sentencize(text: str) -> t.List[str]:
 
 def tokenize(text: str) -> t.List[t.Dict[str, t.Any]]:
     return [w.strip() for w in re.split(TOKEN_END, text) if w.strip()]
-
-# cd .\augustine_text\
-# python -m nuitka --module .\utility.py

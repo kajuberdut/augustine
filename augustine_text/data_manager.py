@@ -4,7 +4,7 @@ from importlib import resources
 from pathlib import Path
 from sqlite3 import Connection
 
-from dsorm import Column, Database, Table, post_connect
+from dsorm import Database, Table, post_connect
 
 from augustine_text import data
 from augustine_text.data_models import LinkType, docs
@@ -14,7 +14,7 @@ from augustine_text.utility import hash_word, sentencize, tokenize, ue_id
 @post_connect
 def register_functions(db: Database, connection: Connection):
     db.functions_set = True
-    connection.create_function("AdlerHash", 1, hash_word, deterministic=True)
+    connection.create_function("WordHash", 1, hash_word, deterministic=True)
     db.remove_hooks(hook_name="post_connect_hook")
 
 
@@ -69,6 +69,7 @@ class Sentence:
     def token_data(self):
         return [
             {
+                "id": hash_word(token.chars),
                 "word": token.chars,
                 "i": order,
                 "link_type_id": link_type,
@@ -123,97 +124,66 @@ class Doc:
         )
         temp_words.execute()
 
-        temp_links = Table(
-            table_name=f"temp_links_{ue_id()}",
-            column=[
-                Column(column_name="a_word_id", python_type=int),
-                Column(column_name="b_word_id", python_type=int),
-                Column(column_name="link_type_id", python_type=int),
-                Column(column_name="incidence", python_type=int),
-            ],
-            temp=True,
-        )
-        temp_links.execute()
-
         db = get_db()
         db.execute(
             f""" 
         INSERT INTO word(id, word)
-        SELECT DISTINCT AdlerHash(newwords.word), newwords.word
+        SELECT DISTINCT newwords.id, newwords.word
         FROM [{temp_words.table_name}] newwords
-        LEFT JOIN word oldwords ON newwords.word = oldwords.word
-        WHERE oldwords.word IS NULL
+        LEFT JOIN word oldwords ON newwords.id = oldwords.id
+        WHERE oldwords.id IS NULL
         ;"""
         )
 
-        # db.execute(
-        #     f"""
-        # WITH new_links AS (
-        #     SELECT word.id word_id
-        #         , new.i
-        #         , new.link_type_id
-        #         , new.sentence_id
-        #     FROM [{temp_words.table_name}] new
-        #     JOIN word ON new.word = word.word
-        # )
-        # INSERT INTO [{temp_links.table_name}] (a_word_id, b_word_id, link_type_id, incidence)
-        # SELECT a_word.word_id
-        #     , b_word.word_id
-        #     , CASE
-        #         WHEN a_word.link_type_id = {LinkType.START.value} THEN {LinkType.START.value}
-        #         WHEN b_word.link_type_id = {LinkType.STOP.value} THEN {LinkType.STOP.value}
-        #         ELSE {LinkType.CONT.value}
-        #     END link_type_id
-        #     , COUNT(*) incidence
-        # FROM new_links a_word
-        # JOIN new_links b_word ON a_word.sentence_id = a_word.sentence_id
-        #                      AND a_word.i = (b_word.i -1)
-        # GROUP BY a_word.word_id
-        #        , b_word.word_id
-        #        , CASE
-        #             WHEN a_word.link_type_id = {LinkType.START.value} THEN {LinkType.START.value}
-        #             WHEN b_word.link_type_id = {LinkType.STOP.value} THEN {LinkType.STOP.value}
-        #             ELSE {LinkType.CONT.value}
-        #          END
-        # ;"""
-        # )
-
-        # db.execute(
-        #     f"""
-        # INSERT INTO link (doc_id, a_word_id, b_word_id, link_type_id, incidence)
-        # SELECT {self.id} doc_id
-        #     , a_word_id
-        #     , b_word_id
-        #     , link_type_id
-        #     , incidence
-        # FROM [{temp_links.table_name}]
-        # WHERE true
-        # ON CONFLICT(doc_id, a_word_id, b_word_id, link_type_id)
-        # DO UPDATE SET
-        # incidence = (link.incidence + excluded.incidence)
-        # WHERE link.doc_id = excluded.doc_id
-        # AND link.a_word_id = excluded.a_word_id
-        # AND link.b_word_id = excluded.b_word_id
-        # AND link.link_type_id = excluded.link_type_id
-        # ;"""
-        # )
+        db.execute(
+            f"""
+WITH temp_links AS (
+ SELECT a_word.id a_word_id
+	  , b_word.id b_word_id
+	  , CASE
+		    WHEN a_word.link_type_id = {LinkType.START.value} 
+			    THEN {LinkType.START.value}
+		    WHEN b_word.link_type_id = {LinkType.STOP.value} 
+			    THEN {LinkType.STOP.value}
+		    ELSE {LinkType.CONT.value}
+	    END link_type_id
+	, COUNT(*) incidence
+	FROM [{temp_words.table_name}] a_word
+	JOIN [{temp_words.table_name}] b_word ON a_word.sentence_id = a_word.sentence_id
+						 AND a_word.i = (b_word.i -1)
+	GROUP BY a_word.id
+		   , b_word.id
+		   , CASE
+		    WHEN a_word.link_type_id = {LinkType.START.value} 
+			    THEN {LinkType.START.value}
+		    WHEN b_word.link_type_id = {LinkType.STOP.value} 
+			    THEN {LinkType.STOP.value}
+		    ELSE {LinkType.CONT.value}
+	    END
+)
+INSERT INTO link (a_word_id, b_word_id, link_type_id, doc_id, incidence)
+SELECT a_word_id
+	, b_word_id
+	, link_type_id
+	, {self.id} doc_id
+	, incidence
+FROM temp_links
+WHERE true
+ON CONFLICT(a_word_id, b_word_id, link_type_id, doc_id)
+DO UPDATE SET
+incidence = (link.incidence + excluded.incidence)
+WHERE link.doc_id = excluded.doc_id
+AND link.a_word_id = excluded.a_word_id
+AND link.b_word_id = excluded.b_word_id
+AND link.link_type_id = excluded.link_type_id
+        ;"""
+        )
         temp_words.drop().execute()
-        # temp_links.drop().execute()
 
 
 if __name__ == "__main__":
-    import pathlib
+    from importlib import resources
 
     db = get_db().initialize()
 
-    path = pathlib.Path("/home/giblesnot/code/augustine-text")
-
-    limit = False
-    text = ""
-    for p in path.iterdir():
-        if p.is_file() and p.suffix == ".txt" and not limit:
-            with open(p, encoding="utf-8") as fh:
-                text += fh.read()
-        limit = True
-
-        d = Doc.from_string("hpmor", text).save()
+    d = Doc.from_string("test", "This is a word list. This is another sentence.").save()

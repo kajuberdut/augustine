@@ -6,26 +6,32 @@ from dsorm import Column, ForeignKey, Table, TypeHandler, UniqueConstraint, make
 from augustine_text.utility import hash_word
 
 
-class AdlerInt(int):
+class WordHashInt(int):
     pass
 
+    @classmethod
+    def from_string(cls, word: t.Union[str, bytes]) -> "WordHashInt":
+        if isinstance(word, bytes):
+            word = word.decode(encoding="utf-8")
+        return cls(hash_word(word))
 
-class AdlerHash(TypeHandler):
-    sql_type = "AdlerHash"
-    python_type = AdlerInt
+
+class WordHash(TypeHandler):
+    sql_type = "WordHashInt"
+    python_type = WordHashInt
 
     @staticmethod
     def to_sql(i: t.Union[str, int, bytes]) -> int:
         if isinstance(i, int):
             return i
-        return hash_word(i)
+        return WordHashInt.from_string(i)
 
     @staticmethod
     def to_python(i: int):
         return i
 
 
-AdlerHash.register()
+WordHash.register()
 
 
 @make_table
@@ -40,7 +46,7 @@ words = Table(
     column=[
         Column(
             column_name="id",
-            python_type=AdlerInt,
+            python_type=WordHashInt,
             pkey=True,
         ),
         Column(column_name="word", python_type=str, nullable=False, unique=True),
@@ -61,25 +67,14 @@ links = Table(
         Column(column_name="a_word_id", python_type=int, nullable=False),
         Column(column_name="b_word_id", python_type=int, nullable=False),
         Column(column_name="link_type_id", python_type=LinkType, nullable=False),
+        Column(column_name="doc_id", python_type=int, nullable=False),
+        Column(column_name="incidence", python_type=int),
     ],
     constraints=[
         words.fkey("a_word_id"),
         words.fkey("b_word_id"),
         ForeignKey(column="link_type_id", reference="LinkType.id"),
-        UniqueConstraint(column=["a_word_id", "b_word_id", "link_type_id"]),
-    ],
-)
-
-doc_links = Table(
-    table_name="link",
-    column=[
-        Column(column_name="doc_id", python_type=int, nullable=False),
-        Column(column_name="link_id", python_type=int, nullable=False),
-        Column(column_name="incidence", python_type=int),
-    ],
-    constraints=[
         docs.fkey("doc_id"),
-        links.fkey("link_id"),
-        UniqueConstraint(column=["doc_id", "link_id"]),
+        UniqueConstraint(column=["a_word_id", "b_word_id", "doc_id", "link_type_id"]),
     ],
 )
